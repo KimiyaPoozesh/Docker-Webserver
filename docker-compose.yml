@@ -8,12 +8,15 @@ services:
       - ./web:/code
     expose:
       - "8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: uwsgi --http 0.0.0.0:8000 --module myproject.wsgi
 
   nginx:
     build:
       context: ./nginx
     volumes:
-      - ./html:/usr/share/nginx/html
+      - ./nginx/html:/usr/share/nginx/html
     ports:
       - "80:80"
     depends_on:
