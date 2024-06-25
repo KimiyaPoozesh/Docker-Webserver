@@ -14,6 +14,7 @@ services:
       - "5000:5000"
     cpus: 0.5       # Limit CPU usage to 0.5 cores
     mem_limit: 1g    # Limit memory usage to 1 GB
+    restart: always
 
   nginx:
     image: nginx:latest
@@ -22,6 +23,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ./static:/usr/share/nginx/html/static   # Mount static files for nginx
+    restart: always
 
   db:
     image: postgres:latest
@@ -33,6 +35,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    restart: always
 
 volumes:
   postgres-data:
