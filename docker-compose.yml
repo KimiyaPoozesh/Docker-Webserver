@@ -1,23 +1,38 @@
-version: '3.8'
+version: '3'
 
 services:
-  web:
-    build:
-      context: ./web
+  flask:
+    build: .
     volumes:
-      - ./web:/code
-    expose:
-      - "8000"
+      - ./data:/data
+      - ./static:/app/static   # Mount static files directory
+    depends_on:
+      - db
     environment:
-      - PYTHONUNBUFFERED=1
-    command: uwsgi --http 0.0.0.0:8000 --module myproject.wsgi
+      FLASK_ENV: production
+    ports:
+      - "5000:5000"
+    cpus: 0.5       # Limit CPU usage to 0.5 cores
+    mem_limit: 1g    # Limit memory usage to 1 GB
 
   nginx:
-    build:
-      context: ./nginx
-    volumes:
-      - ./nginx/html:/usr/share/nginx/html
+    image: nginx:latest
     ports:
       - "80:80"
-    depends_on:
-      - web
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./static:/usr/share/nginx/html/static   # Mount static files for nginx
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: flask_db
+      POSTGRES_USER: flask_user
+      POSTGRES_PASSWORD: flask_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
