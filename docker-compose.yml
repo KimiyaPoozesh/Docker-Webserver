@@ -12,8 +12,8 @@ services:
       FLASK_ENV: production
     ports:
       - "5000:5000"
-    cpus: 0.5       # Limit CPU usage to 0.5 cores
-    mem_limit: 1g    # Limit memory usage to 1 GB
+    cpus: 0.5       
+    mem_limit: 1g    
     restart: always
 
   nginx:
